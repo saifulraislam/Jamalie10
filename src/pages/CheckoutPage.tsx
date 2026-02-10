@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MessageCircle, Truck, Check, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import emailjs from '@emailjs/browser';
 import { useCart } from '../contexts/CartContext';
 import { usePageMeta } from '../hooks/usePageMeta';
 
@@ -83,26 +84,33 @@ const CheckoutPage: React.FC = () => {
     };
 
     try {
-      // Send to Netlify Forms
-      const formElement = document.querySelector('form[name="jamalie-cod-order"]') as HTMLFormElement;
-      if (formElement) {
-        const data = new FormData(formElement);
-        data.append('order_data', JSON.stringify(orderDetails));
+      const orderSummary = orderDetails.items
+        .map((item, index) => `${index + 1}. ${item.name} x${item.quantity} = ${item.subtotal} BDT`)
+        .join('\n');
 
-        await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(data as Record<string, string>).toString(),
-        });
+      await emailjs.send(
+        'service_mp5o0yn',
+        'template_w05g9x9',
+        {
+          customer_name: orderDetails.customerName,
+          phone_number: orderDetails.phoneNumber,
+          address: orderDetails.address,
+          birthday: orderDetails.birthday,
+          is_gift_order: orderDetails.isGiftOrder ? 'Yes' : 'No',
+          gift_recipient_name: orderDetails.giftRecipientName ?? '',
+          order_items: orderSummary,
+          total_amount: `${orderDetails.totalAmount} BDT`,
+        },
+        'SEROxGK1wHm8z6p8t'
+      );
 
-        setOrderSubmitted(true);
-        clearCart();
+      setOrderSubmitted(true);
+      clearCart();
 
-        // Auto-redirect after 5 seconds
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 5000);
-      }
+      // Auto-redirect after 5 seconds
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 5000);
     } catch (error) {
       console.error('Error submitting order:', error);
       alert('There was an error submitting your order. Please try again.');
@@ -272,13 +280,9 @@ const CheckoutPage: React.FC = () => {
 
               {/* COD Form */}
               <form
-                name="jamalie-cod-order"
-                method="POST"
                 onSubmit={handleCODSubmit}
                 className="space-y-6 bg-white rounded-2xl p-8 border border-[#D6C1A9]/30"
-                {...{ netlify: true } as React.HTMLAttributes<HTMLFormElement>}
               >
-                <input type="hidden" name="form-name" value="jamalie-cod-order" />
 
                 {/* Full Name */}
                 <div>
