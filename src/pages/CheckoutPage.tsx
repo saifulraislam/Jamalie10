@@ -10,6 +10,7 @@ const CheckoutPage: React.FC = () => {
   const { cart, getCartTotal, clearCart } = useCart();
   const [checkoutMethod, setCheckoutMethod] = useState<'whatsapp' | 'cod' | null>(null);
   const [orderSubmitted, setOrderSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize EmailJS with your public key
   useEffect(() => {
@@ -70,6 +71,8 @@ const CheckoutPage: React.FC = () => {
       return;
     }
 
+    setIsSubmitting(true);
+
     const orderDetails = {
       method: 'cod',
       customerName: formData.fullName,
@@ -93,7 +96,7 @@ const CheckoutPage: React.FC = () => {
         .map((item, index) => `${index + 1}. ${item.name} x${item.quantity} = ${item.subtotal} BDT`)
         .join('\n');
 
-      await emailjs.send(
+      const response = await emailjs.send(
         'service_mp5o0yn',
         'template_w05g9x9',
         {
@@ -108,6 +111,8 @@ const CheckoutPage: React.FC = () => {
         }
       );
 
+      console.log('Email sent successfully:', response);
+
       setOrderSubmitted(true);
       clearCart();
 
@@ -118,6 +123,7 @@ const CheckoutPage: React.FC = () => {
     } catch (error) {
       console.error('Error submitting order:', error);
       alert('There was an error submitting your order. Please try again.');
+      setIsSubmitting(false);
     }
   };
 
@@ -421,10 +427,11 @@ const CheckoutPage: React.FC = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full bg-[#5A1E2B] text-[#D6C1A9] py-3 rounded-full font-inter font-medium hover:bg-[#5A1E2B]/90 transition-colors flex items-center justify-center gap-2"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#5A1E2B] text-[#D6C1A9] py-3 rounded-full font-inter font-medium hover:bg-[#5A1E2B]/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Check size={20} />
-                  Complete Order
+                  {isSubmitting ? 'Submitting...' : 'Complete Order'}
                 </motion.button>
 
                 <p className="text-xs font-inter text-[#5A1E2B]/60 text-center">
