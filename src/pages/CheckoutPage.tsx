@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MessageCircle, Truck, Check, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,11 @@ const CheckoutPage: React.FC = () => {
   const { cart, getCartTotal, clearCart } = useCart();
   const [checkoutMethod, setCheckoutMethod] = useState<'whatsapp' | 'cod' | null>(null);
   const [orderSubmitted, setOrderSubmitted] = useState(false);
+
+  // Initialize EmailJS with your public key
+  useEffect(() => {
+    emailjs.init('SEROxGK1wHm8z6p8t');
+  }, []);
   const [formData, setFormData] = useState({
     fullName: '',
     phoneNumber: '',
@@ -100,8 +105,7 @@ const CheckoutPage: React.FC = () => {
           gift_recipient_name: orderDetails.giftRecipientName ?? '',
           order_items: orderSummary,
           total_amount: `${orderDetails.totalAmount} BDT`,
-        },
-        'SEROxGK1wHm8z6p8t'
+        }
       );
 
       setOrderSubmitted(true);
