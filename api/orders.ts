@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import nodemailer from 'nodemailer';
 
 type OrderItem = {
   name: string;
@@ -131,6 +132,34 @@ export default async function handler(req: RequestLike, res: any) {
     )
     returning id;
   `;
+
+  // Email backup (using nodemailer, e.g. with Gmail SMTP or Vercel SMTP)
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT) || 465,
+      secure: true,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const orderSummary = body.items?.map(
+      (item, i) => `${i + 1}. ${item.name} (x${item.quantity}) - ${item.price * item.quantity} BDT`
+    ).join('\n') || '';
+
+    const mailOptions = {
+      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      to: process.env.ORDER_NOTIFICATION_EMAIL || process.env.SMTP_USER,
+      subject: `New Order from ${body.customerName}`,
+      text: `Order Details:\n\nName: ${body.customerName}\nPhone: ${body.phoneNumber}\nAddress: ${body.address}\nBirthday: ${body.birthday}\nGift: ${body.isGiftOrder ? 'Yes' : 'No'}${body.isGiftOrder ? `\nGift Recipient: ${body.giftRecipientName}` : ''}\n\nItems:\n${orderSummary}\n\nTotal: ${body.totalAmount} BDT\nTime: ${body.timestamp}`,
+    };
+    await transporter.sendMail(mailOptions);
+  } catch (err) {
+    // Don't block order, just log
+    console.error('Order email backup failed:', err);
+  }
 
   res.status(200).json({ ok: true, orderId: orderRecord[0]?.id ?? null });
 }

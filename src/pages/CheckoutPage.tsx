@@ -96,8 +96,15 @@ const CheckoutPage: React.FC = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null) as { error?: string } | null;
-        throw new Error(errorData?.error ?? 'Order submission failed');
+        let errorMessage = `Server error: ${response.status}`;
+        try {
+          const errorData = await response.json() as { error?: string };
+          errorMessage = errorData?.error ?? errorMessage;
+        } catch {
+          const text = await response.text();
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
@@ -112,8 +119,8 @@ const CheckoutPage: React.FC = () => {
       }, 5000);
     } catch (error) {
       console.error('Error submitting order:', error);
-      const message = error instanceof Error ? error.message : 'Please try again.';
-      alert(`There was an error submitting your order: ${message}`);
+      const message = error instanceof Error ? error.message : 'Network error. Please check your connection.';
+      alert(`Order submission failed: ${message}`);
       setIsSubmitting(false);
     }
   };
