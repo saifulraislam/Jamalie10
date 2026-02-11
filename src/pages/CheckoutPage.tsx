@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, MessageCircle, Truck, Check, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import emailjs from '@emailjs/browser';
 import { useCart } from '../contexts/CartContext';
 import { usePageMeta } from '../hooks/usePageMeta';
 
@@ -12,10 +11,6 @@ const CheckoutPage: React.FC = () => {
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Initialize EmailJS with your public key
-  useEffect(() => {
-    emailjs.init('SEROxGK1wHm8z6p8t');
-  }, []);
   const [formData, setFormData] = useState({
     fullName: '',
     phoneNumber: '',
@@ -92,26 +87,21 @@ const CheckoutPage: React.FC = () => {
     };
 
     try {
-      const orderSummary = orderDetails.items
-        .map((item, index) => `${index + 1}. ${item.name} x${item.quantity} = ${item.subtotal} BDT`)
-        .join('\n');
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderDetails)
+      });
 
-      const response = await emailjs.send(
-        'service_mp5o0yn',
-        'template_w05g9x9',
-        {
-          customer_name: orderDetails.customerName,
-          phone_number: orderDetails.phoneNumber,
-          address: orderDetails.address,
-          birthday: orderDetails.birthday,
-          is_gift_order: orderDetails.isGiftOrder ? 'Yes' : 'No',
-          gift_recipient_name: orderDetails.giftRecipientName ?? '',
-          order_items: orderSummary,
-          total_amount: `${orderDetails.totalAmount} BDT`,
-        }
-      );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null) as { error?: string } | null;
+        throw new Error(errorData?.error ?? 'Order submission failed');
+      }
 
-      console.log('Email sent successfully:', response);
+      const result = await response.json();
+      console.log('Order submitted successfully:', result);
 
       setOrderSubmitted(true);
       clearCart();
@@ -122,7 +112,8 @@ const CheckoutPage: React.FC = () => {
       }, 5000);
     } catch (error) {
       console.error('Error submitting order:', error);
-      alert('There was an error submitting your order. Please try again.');
+      const message = error instanceof Error ? error.message : 'Please try again.';
+      alert(`There was an error submitting your order: ${message}`);
       setIsSubmitting(false);
     }
   };
