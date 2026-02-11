@@ -1,5 +1,4 @@
 import { neon } from '@neondatabase/serverless';
-import { Resend } from 'resend';
 
 type OrderItem = {
   name: string;
@@ -28,30 +27,6 @@ const getBody = (req: { body?: unknown }) => {
   return req.body ?? {};
 };
 
-const formatEmail = (order: OrderPayload) => {
-  const lines = order.items.map(
-    (item, index) => `${index + 1}. ${item.name} x${item.quantity} = ${item.subtotal} BDT`
-  );
-
-  return [
-    `New COD Order`,
-    ``,
-    `Customer: ${order.customerName}`,
-    `Phone: ${order.phoneNumber}`,
-    `Address: ${order.address}`,
-    `Birthday: ${order.birthday}`,
-    `Gift: ${order.isGiftOrder ? 'Yes' : 'No'}`,
-    order.isGiftOrder && order.giftRecipientName ? `Recipient: ${order.giftRecipientName}` : null,
-    ``,
-    `Items:`,
-    ...lines,
-    ``,
-    `Total: ${order.totalAmount} BDT`,
-  ]
-    .filter(Boolean)
-    .join('\n');
-};
-
 type RequestLike = {
   method?: string;
   body?: unknown;
@@ -77,16 +52,16 @@ export default async function handler(req: RequestLike, res: any) {
     return;
   }
 
-  const adminToken = process.env.ADMIN_TOKEN;
-  if (adminToken) {
-    const token = getToken(req);
-    if (!token || token !== adminToken) {
-      res.status(401).json({ error: 'Unauthorized' });
-      return;
-    }
-  }
-
   if (req.method === 'GET') {
+    const adminToken = process.env.ADMIN_TOKEN;
+    if (adminToken) {
+      const token = getToken(req);
+      if (!token || token !== adminToken) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+      }
+    }
+
     const sql = neon(process.env.NEON_DATABASE_URL);
     const orders = await sql`
       select
@@ -156,16 +131,6 @@ export default async function handler(req: RequestLike, res: any) {
     )
     returning id;
   `;
-
-  if (process.env.RESEND_API_KEY && process.env.ORDER_EMAIL_TO) {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: process.env.ORDER_EMAIL_FROM ?? 'onboarding@resend.dev',
-      to: process.env.ORDER_EMAIL_TO,
-      subject: `New COD Order - ${body.customerName}`,
-      text: formatEmail(body as OrderPayload),
-    });
-  }
 
   res.status(200).json({ ok: true, orderId: orderRecord[0]?.id ?? null });
 }
