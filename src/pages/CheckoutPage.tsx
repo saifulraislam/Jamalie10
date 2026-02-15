@@ -154,32 +154,52 @@ const CheckoutPage: React.FC = () => {
       <AnimatePresence>
         {showToast && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
+            initial={{ opacity: 0, y: -50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -50, scale: 0.9 }}
+            transition={{ duration: 0.5, type: 'spring', stiffness: 300, damping: 30 }}
             className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
           >
-            <div className="bg-gradient-to-r from-[#E2725B] to-[#D45A45] rounded-2xl p-4 shadow-2xl">
-              <div className="flex items-center gap-3">
+            <motion.div 
+              className="bg-gradient-to-r from-[#E2725B] to-[#D45A45] rounded-2xl p-5 shadow-2xl border border-white/20 backdrop-blur-sm"
+              animate={{ 
+                boxShadow: [
+                  '0 20px 25px -5px rgba(226, 114, 91, 0.4)',
+                  '0 25px 30px -5px rgba(226, 114, 91, 0.6)',
+                  '0 20px 25px -5px rgba(226, 114, 91, 0.4)'
+                ]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <div className="flex items-center gap-4">
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                  className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0"
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
+                  className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0"
                 >
-                  <Check className="w-4 h-4 text-[#E2725B]" />
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 0.6, delay: 0.4, repeat: 1 }}
+                  >
+                    <Check className="w-5 h-5 text-[#E2725B] font-bold" />
+                  </motion.div>
                 </motion.div>
-                <div className="flex-1">
-                  <h3 className="text-white font-playfair font-semibold text-base">
-                    Order Confirmed!
+                <motion.div 
+                  className="flex-1"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3, duration: 0.4 }}
+                >
+                  <h3 className="text-white font-playfair font-semibold text-lg">
+                    Order Confirmed! ✓
                   </h3>
-                  <p className="text-white/90 font-inter text-sm mt-0.5">
+                  <p className="text-white/95 font-inter text-sm mt-1">
                     Your order has been successfully submitted
                   </p>
-                </div>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
