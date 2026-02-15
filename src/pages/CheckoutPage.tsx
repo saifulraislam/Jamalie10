@@ -10,6 +10,7 @@ const CheckoutPage: React.FC = () => {
   const [checkoutMethod, setCheckoutMethod] = useState<'whatsapp' | 'cod' | null>(null);
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -110,6 +111,7 @@ const CheckoutPage: React.FC = () => {
       const result = await response.json();
       console.log('Order submitted successfully:', result);
 
+      setShowToast(true);
       setOrderSubmitted(true);
       clearCart();
 
@@ -148,6 +150,39 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <div className="pt-20 bg-[#F5F0E8] min-h-screen">
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+            className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
+          >
+            <div className="bg-gradient-to-r from-[#E2725B] to-[#D45A45] rounded-2xl p-4 shadow-2xl">
+              <div className="flex items-center gap-3">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                  className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0"
+                >
+                  <Check className="w-4 h-4 text-[#E2725B]" />
+                </motion.div>
+                <div className="flex-1">
+                  <h3 className="text-white font-playfair font-semibold text-base">
+                    Order Confirmed!
+                  </h3>
+                  <p className="text-white/90 font-inter text-sm mt-0.5">
+                    Your order has been successfully submitted
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="container mx-auto px-4 lg:px-8 py-12">
         <AnimatePresence mode="wait">
           {!checkoutMethod && !orderSubmitted ? (
