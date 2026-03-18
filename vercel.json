@@ -2,14 +2,14 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "env": {
-    "NEON_DATABASE_URL": "@neon_database_url",
-    "SMTP_HOST": "@smtp_host",
-    "SMTP_PORT": "@smtp_port",
-    "SMTP_USER": "@smtp_user",
-    "SMTP_PASS": "@smtp_pass",
-    "SMTP_FROM": "@smtp_from",
-    "ORDER_NOTIFICATION_EMAIL": "@order_notification_email",
-    "ADMIN_TOKEN": "@admin_token"
+    "NEON_DATABASE_URL": "@NEON_DATABASE_URL",
+    "SMTP_HOST": "@SMTP_HOST",
+    "SMTP_PORT": "@SMTP_PORT",
+    "SMTP_USER": "@SMTP_USER",
+    "SMTP_PASS": "@SMTP_PASS",
+    "SMTP_FROM": "@SMTP_FROM",
+    "ORDER_NOTIFICATION_EMAIL": "@ORDER_NOTIFICATION_EMAIL",
+    "ADMIN_TOKEN": "@ADMIN_TOKEN"
   },
   "rewrites": [
     {
