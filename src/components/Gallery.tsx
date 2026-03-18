@@ -139,7 +139,7 @@ const InstagramStoryGallery: React.FC = () => {
           </h2>
           
           <p className="text-sm sm:text-base md:text-lg text-[#5A1E2B]/80 max-w-2xl mx-auto px-4 leading-relaxed">
-            A glimpse into our creative process and the inspiration behind our timeless collections.
+            Sunlight on thread. Paper that holds texture. The in-between moments worth writing down.
           </p>
           
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gradient-to-r from-transparent via-[#D6C1A9] to-transparent my-6 sm:my-8 mx-auto" />

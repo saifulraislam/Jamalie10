@@ -17,7 +17,8 @@ const Footer: React.FC = () => {
           <div className="text-center md:text-left">
             <h3 className="text-2xl font-playfair font-bold mb-4 tracking-tight">Jamaliè</h3>
             <p className="font-inter font-light text-sm md:text-base leading-relaxed max-w-xs mx-auto md:mx-0">
-              Timeless craftsmanship and elegant design for the discerning individual.
+              Handcrafted diaries and hand-embroidered journals, made in Bangladesh
+              with love for the ones who still believe in beautiful things.
             </p>
           </div>
 

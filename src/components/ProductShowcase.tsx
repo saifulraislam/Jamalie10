@@ -97,11 +97,11 @@ const ProductShowcase: React.FC = () => {
           className="text-center mb-12 md:mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-playfair font-bold text-[#5A1E2B] mb-4 tracking-tight">
-            Our Curated
+            Our Crafted
             <span className="text-[#D6C1A9] block mt-2">Collection</span>
           </h2>
           <p className="text-base md:text-lg font-inter font-light text-[#5A1E2B]/90 max-w-2xl mx-auto px-4">
-            Timeless pieces crafted with intention
+            Every journal in our collection is hand-stitched in Dhaka. No machines. No shortcuts. No two exactly alike.
           </p>
           <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#D6C1A9] to-transparent my-6 mx-auto" />
         </motion.div>
@@ -212,7 +212,8 @@ const ProductShowcase: React.FC = () => {
           className="text-center mt-12 md:mt-16"
         >
           <p className="text-base md:text-lg font-inter font-light text-[#5A1E2B]/80 mb-4 max-w-2xl mx-auto px-4">
-            For custom orders or special requests, we'd love to create something unique for you.
+            Have something living in your chest that needs a place to go?
+We'll stitch it, bind it, and make it entirely yours.
           </p>
           <motion.a
             href="https://wa.me/8801881445154?text=I'd like to make a custom order"

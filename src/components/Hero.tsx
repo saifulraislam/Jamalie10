@@ -53,7 +53,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
           className="text-base sm:text-lg md:text-xl lg:text-2xl font-light text-white/90 leading-relaxed mb-10 drop-shadow-sm"
         >
-          The art of timeless craftsmanship.
+          Handcrafted, hand-embroidered journals.
         </motion.p>
 
         <motion.a

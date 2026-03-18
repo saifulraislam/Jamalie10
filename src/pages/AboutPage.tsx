@@ -7,7 +7,7 @@ const AboutPage: React.FC = () => {
   usePageMeta({
     title: 'About Jamaliè',
     description: 'Learn about Jamaliè\'s journey, values, and commitment to timeless craftsmanship and sustainable luxury.',
-    keywords: 'about us, brand story, artisan craftsmanship, sustainability'
+    keywords: 'about us, brand story, Handcrafted lifestyle brand Bangladesh, Handmade gifts Bangladesh, Hand-embroidered journal Bangladesh'
   });
 
   const values = [
@@ -70,22 +70,18 @@ const AboutPage: React.FC = () => {
               className="lg:w-1/2"
             >
               <h2 className="text-2xl md:text-3xl font-playfair font-bold text-[#2D3436] mb-4">
-                Our Story
+                The Story of Jamaliè
               </h2>
               <div className="space-y-4 text-[#555555] leading-relaxed text-sm md:text-base">
                 <p>
-                  Jamaliè was born from a vision to create something truly special in a world of mass production. 
-                  Founded in 2018, our journey began with a simple question: "What if we could bring back the 
-                  art of thoughtful design and meticulous craftsmanship?"
+                  There is a kind of beauty that cannot be printed, pressed, or produced in a factory.
                 </p>
-                <p>
-                  Our founder, inspired by travels across artisan communities worldwide, discovered that the 
-                  most beautiful creations came from those who poured their heart and soul into their work. 
-                  This revelation became the cornerstone of our philosophy.
+                <p>It lives in the slight pull of thread through linen. In the weight of a well-bound journal in your hands. In the moment you open something and feel without knowing why that a person made this for you.
                 </p>
+                <p>Jamaliè was born from that feeling.</p>
+                <p>Founded in Dhaka in 2026, we started with one quiet belief: that in a world rushing to produce more, there is profound value in making less but making it right. Every hand-embroidered diary, every stitched hoop, every hand-poured candle we make carries time inside it. The time of the hands that made it. That is not something a machine can replicate.</p>
                 <p>
-                  Today, Jamaliè stands as a testament to the power of passion-driven creation. Every product 
-                  in our collection tells a story of dedication, quality, and the pursuit of timeless elegance.
+                  We are not inspired by trends. We are inspired by our grandmothers — the women who stitched nakshi kantha from old saris not because it was efficient, but because it was meaningful. That patience lives in every Jamaliè piece.
                 </p>
               </div>
             </motion.div>
@@ -127,9 +123,8 @@ const AboutPage: React.FC = () => {
                 <h3 className="text-xl font-playfair font-bold text-[#2D3436]">Our Mission</h3>
               </div>
               <p className="text-[#555555] leading-relaxed text-sm">
-                To create exceptional products that inspire confidence and celebrate individual style. 
-                We are committed to sustainable practices, ethical sourcing, and supporting artisan 
-                communities worldwide while delivering uncompromising quality to our customers.
+                Bangladesh deserves a premium handcrafted brand that feels like home.
+Most premium lifestyle products here are either imported and out of reach, or local and mass-produced. Jamaliè exists in the space between handcrafted in Bangladesh, made for the who wants something that means something.
               </p>
             </motion.div>
 
@@ -147,9 +142,7 @@ const AboutPage: React.FC = () => {
                 <h3 className="text-xl font-playfair font-bold text-[#2D3436]">Our Vision</h3>
               </div>
               <p className="text-[#555555] leading-relaxed text-sm">
-                To become the world's most trusted name in luxury craftsmanship, where every product 
-                represents the perfect harmony of tradition and innovation. We envision a future where 
-                quality triumphs over quantity, and every purchase makes a positive impact.
+                We make diaries for thoughts that deserve a beautiful place to live. Candles for the evenings when you need the world to go quiet. Hoop art for walls that should tell a story. Perfume for the woman who wears her mood, not a trend.
               </p>
             </motion.div>
           </div>
@@ -170,7 +163,7 @@ const AboutPage: React.FC = () => {
               Our Values
             </h2>
             <p className="text-[#555555] text-sm md:text-base max-w-2xl mx-auto">
-              The principles that guide everything we do and shape who we are as a brand.
+              Slow over Fast We will never rush a stitch to meet a deadline.
             </p>
           </motion.div>
 
@@ -265,11 +258,10 @@ const AboutPage: React.FC = () => {
           >
             <Sparkles className="w-10 h-10 mx-auto mb-4 opacity-80" />
             <h2 className="text-2xl md:text-3xl font-playfair font-bold mb-4">
-              Join Our Story
+              You Are Not Just a Customer
             </h2>
             <p className="text-sm md:text-base mb-6 opacity-90 max-w-2xl mx-auto">
-              Become part of the Jamaliè family and experience the difference that passion and 
-              craftsmanship can make in your life.
+              You are the reason we thread the needle carefully. You are the story the journal is waiting for. You are who Jamaliè is made for.
             </p>
             <motion.a
               href="/collection"

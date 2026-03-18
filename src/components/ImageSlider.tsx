@@ -34,8 +34,8 @@ const ImageSlider: React.FC = () => {
         tablet: "mood (2).jpeg",
         mobile: "mood (2).jpeg"
       },
-      title: "Artisan Craftsmanship",
-      subtitle: "Handcrafted with precision and passion"
+      title: "Stitched by Hand",
+      subtitle: "Handcrafted with precision and passion."
     },
     {
       id: 2,
@@ -44,8 +44,8 @@ const ImageSlider: React.FC = () => {
         tablet: "mood (3).jpeg",
         mobile: "mood (3).jpeg"
       },
-      title: "Premium Materials",
-      subtitle: "Only the finest materials make the cut"
+      title: "Materials That Last",
+      subtitle: "Only the finest make it into a Jamaliè journal"
     },
     {
       id: 3,
@@ -54,8 +54,8 @@ const ImageSlider: React.FC = () => {
         tablet: "mood(4).jpeg",
         mobile: "mood(4).jpeg"
       },
-      title: "Timeless Design",
-      subtitle: "Elegance that transcends trends"
+      title: "Beyond the Trend",
+      subtitle: "Elegance that transcends time"
     },
     {
       id: 4,
@@ -64,8 +64,8 @@ const ImageSlider: React.FC = () => {
         tablet: "mood (1).jpeg",
         mobile: "mood (1).jpeg"
       },
-      title: "Luxury Collection",
-      subtitle: "Discover our signature pieces"
+      title: "The Handcrafted Collection",
+      subtitle: "Discover our signature pieces made of hands."
     }
   ];
 
