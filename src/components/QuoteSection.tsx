@@ -16,7 +16,7 @@ const QuoteSection: React.FC = () => {
           <Quote className="w-12 h-12 md:w-16 md:h-16 text-maroon-800 mx-auto mb-6 opacity-60" />
           
           <blockquote className="text-2xl md:text-3xl lg:text-4xl font-playfair font-medium text-maroon-800 italic leading-relaxed mb-8">
-            "There are objects that hold memory better than the mind does. We make those objects. So your story has somewhere beautiful to live."
+            "There are objects that hold memory better than the mind does. We make those objects. So your story has somewhere beautiful to lives."
           </blockquote>
           
           <motion.div
