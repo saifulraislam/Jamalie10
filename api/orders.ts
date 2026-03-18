@@ -35,6 +35,11 @@ type RequestLike = {
   headers?: Record<string, string | string[] | undefined>;
 };
 
+type ResponseLike = {
+  status: (code: number) => ResponseLike;
+  json: (data: unknown) => void;
+};
+
 const getToken = (req: RequestLike) => {
   const authHeader = req.headers?.authorization;
   if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
@@ -47,7 +52,7 @@ const getToken = (req: RequestLike) => {
   return typeof queryToken === 'string' ? queryToken : undefined;
 };
 
-export default async function handler(req: RequestLike, res: any) {
+export default async function handler(req: RequestLike, res: ResponseLike) {
   if (!process.env.NEON_DATABASE_URL) {
     res.status(500).json({ error: 'NEON_DATABASE_URL is not configured' });
     return;
