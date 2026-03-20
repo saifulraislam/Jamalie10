@@ -46,13 +46,13 @@ const ContactPage: React.FC = () => {
     {
       icon: MapPin,
       title: "Visit Us",
-      details: ["123 Luxury Avenue", "Paris, France 75001"],
+      details: ["Dhaka, Bangladesh"],
       action: "Get Directions"
     },
     {
       icon: Phone,
       title: "Call Us",
-      details: ["+1 (555) 123-4567", "+1 (555) 987-6543"],
+      details: ["+88 01881445154", "+8801930996101"],
       action: "Call Now"
     },
     {
@@ -64,7 +64,7 @@ const ContactPage: React.FC = () => {
     {
       icon: Clock,
       title: "Business Hours",
-      details: ["Mon - Fri: 9:00 AM - 6:00 PM", "Sat - Sun: 10:00 AM - 4:00 PM"],
+      details: ["Sat - Fri: 10:00 AM - 12:00 PM"],
       action: null
     }
   ];
@@ -72,7 +72,7 @@ const ContactPage: React.FC = () => {
   return (
     <div className="pt-20 md:pt-24">
       {/* Hero Section */}
-      <section className="py-12 md:py-20 bg-gradient-to-br from-maroon-50 to-terracotta-50">
+      <section className="py-12 md:py-20 bg-gradient-to-br from-[#F5F1ED] to-[#EDE8E1]">
         <div className="container mx-auto px-4 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -80,7 +80,7 @@ const ContactPage: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-playfair font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-playfair font-bold text-[#000000] mb-6">
               Get In
               <span className="gradient-text block mt-2">Touch</span>
             </h1>
@@ -140,7 +140,7 @@ const ContactPage: React.FC = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-2xl md:text-3xl font-playfair font-bold text-gray-900 mb-6">
+              <h2 className="text-2xl md:text-3xl font-playfair font-bold text-maroon-800 mb-6">
                 Send Us a Message
               </h2>
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -240,7 +240,7 @@ const ContactPage: React.FC = () => {
               className="space-y-8"
             >
               <div>
-                <h2 className="text-2xl md:text-3xl font-playfair font-bold text-gray-900 mb-6">
+                <h2 className="text-2xl md:text-3xl font-playfair font-bold text-maroon-800 mb-6">
                   Quick Actions
                 </h2>
                 <div className="space-y-4">
@@ -267,13 +267,13 @@ const ContactPage: React.FC = () => {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex items-center gap-4 p-4 bg-pink-50 border border-pink-200 rounded-lg hover:bg-pink-100 transition-all duration-200 group"
+                    className="flex items-center gap-4 p-4 bg-[#F5F1ED] border border-[#E5DFD7] rounded-lg hover:bg-[#EDE8E1] transition-all duration-200 group"
                   >
-                    <div className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white">
+                    <div className="w-12 h-12 bg-[#D6C1A9] rounded-full flex items-center justify-center text-white">
                       <Instagram size={20} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 group-hover:text-pink-700">Follow Us</h3>
+                      <h3 className="font-semibold text-gray-900 group-hover:text-[#B8A089]">Follow Us</h3>
                       <p className="text-sm text-gray-600">Stay updated with our latest collections</p>
                     </div>
                   </motion.a>
@@ -282,7 +282,7 @@ const ContactPage: React.FC = () => {
 
               {/* FAQ Section */}
               <div>
-                <h3 className="text-xl font-playfair font-semibold text-gray-900 mb-4">
+                <h3 className="text-xl font-playfair font-semibold text-maroon-800 mb-4">
                   Frequently Asked Questions
                 </h3>
                 <div className="space-y-3">
@@ -336,7 +336,7 @@ const ContactPage: React.FC = () => {
               <div className="text-center">
                 <MapPin className="w-16 h-16 text-maroon-800 mx-auto mb-4" />
                 <h3 className="text-xl font-playfair font-semibold text-gray-900 mb-2">Visit Our Showroom</h3>
-                <p className="text-gray-600">123 Luxury Avenue, Paris, France</p>
+                <p className="text-gray-600">Dhaka, Bangladesh</p>
                 <button className="mt-4 bg-maroon-800 text-white px-6 py-2 rounded-full hover:bg-maroon-700 transition-colors duration-200">
                   Get Directions
                 </button>
