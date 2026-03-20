@@ -100,7 +100,7 @@ const CollectionPage: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-5xl font-playfair font-bold text-[#5A1E2B] mb-4 tracking-tight">
-              ROWEAM
+              JAMALIÈ
             </h1>
             <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs md:text-sm text-[#E2725B] font-medium tracking-widest mb-6">
               <span>NOP</span>
