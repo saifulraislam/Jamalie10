@@ -53,26 +53,69 @@ const getToken = (req: RequestLike) => {
 };
 
 export default async function handler(req: RequestLike, res: ResponseLike) {
-  if (!process.env.NEON_DATABASE_URL) {
-    res.status(500).json({ error: 'NEON_DATABASE_URL is not configured' });
-    return;
-  }
+  try {
+    if (!process.env.NEON_DATABASE_URL) {
+      res.status(500).json({ error: 'NEON_DATABASE_URL is not configured' });
+      return;
+    }
 
-  if (req.method === 'GET') {
-    const adminToken = process.env.ADMIN_TOKEN;
-    if (adminToken) {
-      const token = getToken(req);
-      if (!token || token !== adminToken) {
-        res.status(401).json({ error: 'Unauthorized' });
-        return;
+    if (req.method === 'GET') {
+      const adminToken = process.env.ADMIN_TOKEN;
+      if (adminToken) {
+        const token = getToken(req);
+        if (!token || token !== adminToken) {
+          res.status(401).json({ error: 'Unauthorized' });
+          return;
+        }
       }
+
+      const sql = neon(process.env.NEON_DATABASE_URL);
+      const orders = await sql`
+        select
+          id,
+          created_at,
+          method,
+          customer_name,
+          phone_number,
+          address,
+          birthday,
+          is_gift_order,
+          gift_recipient_name,
+          items,
+          total_amount
+        from orders
+        order by created_at desc
+        limit 100;
+      `;
+
+      res.status(200).json({ orders });
+      return;
+    }
+
+    if (req.method !== 'POST') {
+      res.status(405).json({ error: 'Method not allowed' });
+      return;
+    }
+
+    const body = getBody(req) as Partial<OrderPayload>;
+
+    if (
+      !body.customerName ||
+      !body.phoneNumber ||
+      !body.address ||
+      !body.birthday ||
+      !Array.isArray(body.items) ||
+      body.items.length === 0 ||
+      typeof body.totalAmount !== 'number'
+    ) {
+      res.status(400).json({ error: 'Invalid order payload' });
+      return;
     }
 
     const sql = neon(process.env.NEON_DATABASE_URL);
-    const orders = await sql`
-      select
-        id,
-        created_at,
+
+    const orderRecord = await sql`
+      insert into orders (
         method,
         customer_name,
         phone_number,
@@ -82,89 +125,53 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
         gift_recipient_name,
         items,
         total_amount
-      from orders
-      order by created_at desc
-      limit 100;
+      ) values (
+        ${body.method ?? 'cod'},
+        ${body.customerName},
+        ${body.phoneNumber},
+        ${body.address},
+        ${body.birthday},
+        ${body.isGiftOrder ?? false},
+        ${body.giftRecipientName ?? null},
+        ${JSON.stringify(body.items)},
+        ${body.totalAmount}
+      )
+      returning id;
     `;
 
-    res.status(200).json({ orders });
+    // Email backup (using nodemailer, e.g. with Gmail SMTP or Vercel SMTP)
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT) || 465,
+        secure: true,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+
+      const orderSummary = body.items?.map(
+        (item, i) => `${i + 1}. ${item.name} (x${item.quantity}) - ${item.price * item.quantity} BDT`
+      ).join('\n') || '';
+
+      const mailOptions = {
+        from: process.env.SMTP_FROM || process.env.SMTP_USER,
+        to: process.env.ORDER_NOTIFICATION_EMAIL || process.env.SMTP_USER,
+        subject: `New Order from ${body.customerName}`,
+        text: `Order Details:\n\nName: ${body.customerName}\nPhone: ${body.phoneNumber}\nAddress: ${body.address}\nBirthday: ${body.birthday}\nGift: ${body.isGiftOrder ? 'Yes' : 'No'}${body.isGiftOrder ? `\nGift Recipient: ${body.giftRecipientName}` : ''}\n\nItems:\n${orderSummary}\n\nTotal: ${body.totalAmount} BDT\nTime: ${body.timestamp}`,
+      };
+      await transporter.sendMail(mailOptions);
+    } catch (err) {
+      // Don't block order, just log
+      console.error('Order email backup failed:', err);
+    }
+
+    res.status(200).json({ ok: true, orderId: orderRecord[0]?.id ?? null });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unexpected server error';
+    console.error('Order handler failed:', error);
+    res.status(500).json({ error: message });
     return;
   }
-
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
-  }
-
-  const body = getBody(req) as Partial<OrderPayload>;
-
-  if (
-    !body.customerName ||
-    !body.phoneNumber ||
-    !body.address ||
-    !body.birthday ||
-    !Array.isArray(body.items) ||
-    body.items.length === 0 ||
-    typeof body.totalAmount !== 'number'
-  ) {
-    res.status(400).json({ error: 'Invalid order payload' });
-    return;
-  }
-
-  const sql = neon(process.env.NEON_DATABASE_URL);
-
-  const orderRecord = await sql`
-    insert into orders (
-      method,
-      customer_name,
-      phone_number,
-      address,
-      birthday,
-      is_gift_order,
-      gift_recipient_name,
-      items,
-      total_amount
-    ) values (
-      ${body.method ?? 'cod'},
-      ${body.customerName},
-      ${body.phoneNumber},
-      ${body.address},
-      ${body.birthday},
-      ${body.isGiftOrder ?? false},
-      ${body.giftRecipientName ?? null},
-      ${JSON.stringify(body.items)},
-      ${body.totalAmount}
-    )
-    returning id;
-  `;
-
-  // Email backup (using nodemailer, e.g. with Gmail SMTP or Vercel SMTP)
-  try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 465,
-      secure: true,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-
-    const orderSummary = body.items?.map(
-      (item, i) => `${i + 1}. ${item.name} (x${item.quantity}) - ${item.price * item.quantity} BDT`
-    ).join('\n') || '';
-
-    const mailOptions = {
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
-      to: process.env.ORDER_NOTIFICATION_EMAIL || process.env.SMTP_USER,
-      subject: `New Order from ${body.customerName}`,
-      text: `Order Details:\n\nName: ${body.customerName}\nPhone: ${body.phoneNumber}\nAddress: ${body.address}\nBirthday: ${body.birthday}\nGift: ${body.isGiftOrder ? 'Yes' : 'No'}${body.isGiftOrder ? `\nGift Recipient: ${body.giftRecipientName}` : ''}\n\nItems:\n${orderSummary}\n\nTotal: ${body.totalAmount} BDT\nTime: ${body.timestamp}`,
-    };
-    await transporter.sendMail(mailOptions);
-  } catch (err) {
-    // Don't block order, just log
-    console.error('Order email backup failed:', err);
-  }
-
-  res.status(200).json({ ok: true, orderId: orderRecord[0]?.id ?? null });
 }

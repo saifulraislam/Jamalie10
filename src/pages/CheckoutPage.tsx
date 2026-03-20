@@ -96,19 +96,26 @@ const CheckoutPage: React.FC = () => {
         body: JSON.stringify(orderDetails)
       });
 
-      if (!response.ok) {
-        let errorMessage = `Server error: ${response.status}`;
+      const responseText = await response.text();
+      let responseData: { error?: string; ok?: boolean; orderId?: number | null } | null = null;
+
+      if (responseText) {
         try {
-          const errorData = await response.json() as { error?: string };
-          errorMessage = errorData?.error ?? errorMessage;
+          responseData = JSON.parse(responseText) as { error?: string; ok?: boolean; orderId?: number | null };
         } catch {
-          const text = await response.text();
-          errorMessage = text || errorMessage;
+          responseData = null;
         }
+      }
+
+      if (!response.ok) {
+        const errorMessage =
+          responseData?.error ||
+          responseText ||
+          `Server error: ${response.status}`;
         throw new Error(errorMessage);
       }
 
-      const result = await response.json();
+      const result = responseData;
       console.log('Order submitted successfully:', result);
 
       setShowToast(true);
